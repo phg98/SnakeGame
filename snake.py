@@ -30,9 +30,18 @@ screen_size = (480, 320)
 tile_size = (10,10)
 screen = pygame.display.set_mode(screen_size, DOUBLEBUF)
 head_pos = (100, 100)
+snake = [head_pos, (head_pos[0]-10, head_pos[1]), (head_pos[0]-20, head_pos[1])]
 
 # 
 direction = D_RIGHT
+
+def erase_old_snake():
+    tail_pos = snake[len(snake)-1]
+    pygame.draw.rect(screen, BLACK, (tail_pos[0], tail_pos[1], tile_size[0],tile_size[1]))
+    
+def draw_snake():
+    head_pos = snake[0]
+    pygame.draw.rect(screen, GREEN, (head_pos[0], head_pos[1], tile_size[0],tile_size[1]))
 
 # Main Loop
 while True:
@@ -62,29 +71,31 @@ while True:
                 if direction != D_UP:
                     direction = D_DOWN
 
-    # Update old screen
-    pygame.draw.rect(screen, BLACK, (head_pos[0], head_pos[1], tile_size[0],tile_size[1]))
+    
+    erase_old_snake()
 
     # Update state
+    head_pos = snake[0]
     if direction ==D_RIGHT:
-        head_pos = (head_pos[0]+10, head_pos[1])
-        if head_pos[0] >= screen_size[0]:
-            head_pos = (0, head_pos[1])
+        new_head_pos = (head_pos[0]+10, head_pos[1])
+        if new_head_pos[0] >= screen_size[0]:
+            new_head_pos = (0, head_pos[1])
     elif direction ==D_LEFT:
-        head_pos = (head_pos[0]-10, head_pos[1])
-        if head_pos[0] < 0:
-            head_pos = (screen_size[0]-tile_size[0], head_pos[1])
+        new_head_pos = (head_pos[0]-10, head_pos[1])
+        if new_head_pos[0] < 0:
+            new_head_pos = (screen_size[0]-tile_size[0], head_pos[1])
     elif direction ==D_DOWN:
-        head_pos = (head_pos[0], head_pos[1]+10)
-        if head_pos[1] >= screen_size[1]:
-            head_pos = (head_pos[0], 0)
+        new_head_pos = (head_pos[0], head_pos[1]+10)
+        if new_head_pos[1] >= screen_size[1]:
+            new_head_pos = (head_pos[0], 0)
     elif direction ==D_UP:
-        head_pos = (head_pos[0], head_pos[1]-10)
-        if head_pos[1] < 0:
-            head_pos = (head_pos[0], screen_size[1]-tile_size[1])
-        
-    # Update screen
-    pygame.draw.rect(screen, GREEN, (head_pos[0], head_pos[1], tile_size[0],tile_size[1]))
+        new_head_pos = (head_pos[0], head_pos[1]-10)
+        if new_head_pos[1] < 0:
+            new_head_pos = (head_pos[0], screen_size[1]-tile_size[1])
+    snake.insert(0, new_head_pos)
+    del snake[len(snake)-1]
+       
+    draw_snake()
 
     pygame.display.flip() # Update screen
     clock.tick(TARGET_FPS) 

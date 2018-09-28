@@ -50,6 +50,10 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
+        if event.type == KEYDOWN:
+            if event.key == K_q:
+                pygame.quit()
+                sys.exit()
 
         if event.type == MOUSEBUTTONDOWN and event.button == LEFT:
             print("left mouse up at (%d, %d)" % event.pos)

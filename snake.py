@@ -47,6 +47,16 @@ def erase_old_snake():
 def draw_snake():
     head_pos = snake[0]
     pygame.draw.rect(screen, GREEN, (head_pos[0], head_pos[1], tile_size[0],tile_size[1]))
+    
+def check_snakebody(snake):
+    head_pos = snake[0]
+    for body in snake[1:]:
+        if body == head_pos:
+            # Game Over
+            # Todo : display game-over message & score 
+            pygame.quit()
+            sys.exit()
+            
 
 ###### Wall handling
 def make_boundary_wall(wall):
@@ -178,6 +188,7 @@ while True:
     tail_increase = check_apple(snake, apples)
     tail_increase_sum += tail_increase
     check_wall(snake, wall)
+    check_snakebody(snake)
         
     draw_snake()
 

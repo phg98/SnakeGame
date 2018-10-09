@@ -3,6 +3,7 @@
 
 import sys, pygame
 from pygame.locals import *
+import random
 
 # frame/sec definition
 target_fps = 15
@@ -29,14 +30,14 @@ D_DOWN = 4
 pygame.init()
 screen_size = (480, 320)
 tile_size = (10,10)
+board_size = (screen_size[0]//tile_size[0], screen_size[1]//tile_size[1])
 screen = pygame.display.set_mode(screen_size, DOUBLEBUF)
-head_pos = (100, 200)
-snake = [head_pos, (head_pos[0]-10, head_pos[1]), (head_pos[0]-20, head_pos[1])]
 score = 0
 
-# 
+###### Snake handling
+head_pos = (100, 200)
+snake = [head_pos, (head_pos[0]-10, head_pos[1]), (head_pos[0]-20, head_pos[1])]
 direction = D_RIGHT
-
 TAIL_INCREASE = 3
 tail_increase_sum = 0
 def erase_old_snake():
@@ -47,9 +48,16 @@ def draw_snake():
     head_pos = snake[0]
     pygame.draw.rect(screen, GREEN, (head_pos[0], head_pos[1], tile_size[0],tile_size[1]))
 
-wall = []
-for i in range(100, 200, 10):
-    wall.append((i, 100))
+###### Wall handling
+def make_boundary_wall(wall):
+    for i in range(0, screen_size[0], tile_size[0]):
+        wall.append((i, 0))
+        wall.append((i, screen_size[1]-tile_size[1]))
+    for i in range(0, screen_size[1], tile_size[1]):
+        wall.append((0, i))
+        wall.append((screen_size[0]-tile_size[0], i))
+    return wall
+wall = make_boundary_wall([])
 for brick in wall:
     pygame.draw.rect(screen, GREY, (brick[0], brick[1], tile_size[0], tile_size[1]))
 def check_wall(snake, wall):
@@ -61,9 +69,27 @@ def check_wall(snake, wall):
             pygame.quit()
             sys.exit()
 
-apples = [(30, 30), (60, 60), (90, 90), (120, 120)]
-for apple_pos in apples:
-    pygame.draw.rect(screen, RED, (apple_pos[0], apple_pos[1], tile_size[0], tile_size[1]))
+###### Apple handling
+def add_apple():
+    apple = get_new_apple()
+    apples.append(apple)
+    draw_apple()
+
+def get_new_apple():
+    apple = (random.randint(0, board_size[0]-1), random.randint(0, board_size[1]-1))
+    apple = (apple[0]*tile_size[0], apple[1]*tile_size[1])
+    for blocks in [apples, wall, snake]:
+        for item in blocks:
+            if item == apple:
+                apple = get_new_apple()
+    return apple
+    
+def draw_apple():
+    for apple_pos in apples:
+        pygame.draw.rect(screen, RED, (apple_pos[0], apple_pos[1], tile_size[0], tile_size[1]))
+        
+apples = []
+add_apple()
 
 def check_apple(snake, apples):
     head_pos = snake[0]
@@ -73,6 +99,7 @@ def check_apple(snake, apples):
             score += 10
             print("Score = ", score)
             del apples[apples.index(apple_pos)]
+            add_apple()
             return TAIL_INCREASE
     return 0
             

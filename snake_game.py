@@ -3,7 +3,8 @@
 
 import sys, pygame
 from pygame.locals import *
-import random
+
+from apple import Apple
 from snake import Snake
 
 # Define colors
@@ -65,48 +66,8 @@ def check_wall(snake, wall):
             sys.exit()
 
 
-###### Apple handling
-def add_apple(apples, wall, snake):
-    apple = get_new_apple(apples, wall, snake)
-    apples.append(apple)
-    draw_apple(apples)
-
-
-def get_new_apple(apples, wall, snake):
-    apple = (random.randint(0, board_size[0] - 1), random.randint(0, board_size[1] - 1))
-    apple = (apple[0] * tile_size[0], apple[1] * tile_size[1])
-    for blocks in [apples, wall, snake]:
-        for item in blocks:
-            if item == apple:
-                apple = get_new_apple(apples, wall, snake)
-    return apple
-
-
-def draw_apple(apples):
-    for apple_pos in apples:
-        pygame.draw.rect(screen, RED, (apple_pos[0], apple_pos[1], tile_size[0], tile_size[1]))
-
-
-def check_apple(wall, snake, apples):
-    global apples_left
-    head_pos = snake.get_head_pos()
+def run_game(wall, apples_left):
     global score
-    for apple_pos in apples:
-        if apple_pos == head_pos:
-            score += 10
-            print("Score = ", score)
-            del apples[apples.index(apple_pos)]
-            apples_left -= 1
-            print("apples_left : ", apples_left)
-            if apples_left <= 0:
-                return 0
-            add_apple(apples, wall, snake)
-            return TAIL_INCREASE
-    return 0
-
-
-def run_game(wall):
-    global apples_left
     # frame/sec definition
     target_fps = 15
     clock = pygame.time.Clock()
@@ -121,7 +82,8 @@ def run_game(wall):
 
     # Init apple
     apples = []
-    add_apple(apples, wall, snake)
+    apple = Apple(screen, screen_size, tile_size, board_size, TAIL_INCREASE, apples_left)
+    apple.add_apple(apples, wall, snake)
 
     # Main Loop
     while True:
@@ -166,12 +128,15 @@ def run_game(wall):
         # Update state
         snake.move(direction)
 
-        # Collision check
-        tail_increase = check_apple(wall, snake, apples)
-        snake.update_tail_increase(tail_increase)
+
+        tail_increase = apple.check_apple(wall, snake, apples)
+        if tail_increase > 0 :
+            snake.update_tail_increase(tail_increase)
+            score += 10
+            print("Score = ", score)
 
         # print(apples_left)
-        if apples_left <= 0:
+        if apple.apples_left <= 0:
             print("stage cleared.")
             return True
         check_wall(snake, wall)
@@ -201,7 +166,7 @@ for level in levels:
     apples_left = 5
     print(level)
     # run_game
-    isClear = run_game(level)
+    isClear = run_game(level, apples_left)
     screen.fill(BLACK)
     if isClear is True:
         # display end screen       

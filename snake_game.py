@@ -8,6 +8,8 @@ from apple import Apple
 from snake import Snake
 
 # Define colors
+from wall import Wall
+
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
@@ -34,38 +36,6 @@ score = 0
 TAIL_INCREASE = 3
 
 
-###### Wall handling
-def make_horizontal_wall(wall, startx, endx, y):
-    for i in range(startx, endx, tile_size[0]):
-        wall.append((i, y))
-    return wall
-
-
-def make_boundary_wall(wall):
-    for i in range(0, screen_size[0], tile_size[0]):
-        wall.append((i, 0))
-        wall.append((i, screen_size[1] - tile_size[1]))
-    for i in range(0, screen_size[1], tile_size[1]):
-        wall.append((0, i))
-        wall.append((screen_size[0] - tile_size[0], i))
-    return wall
-
-
-def draw_wall(wall):
-    for brick in wall:
-        pygame.draw.rect(screen, GREY, (brick[0], brick[1], tile_size[0], tile_size[1]))
-
-
-def check_wall(snake, wall):
-    head_pos = snake[0]
-    for brick in wall:
-        if head_pos == brick:
-            # Game Over
-            # Todo : display game-over message & score 
-            pygame.quit()
-            sys.exit()
-
-
 def run_game(wall, apples_left):
     global score
     # frame/sec definition
@@ -78,7 +48,7 @@ def run_game(wall, apples_left):
     snake.draw_snake()
 
     # Init wall
-    draw_wall(wall)
+    wall.draw_wall()
 
     # Init apple
     apples = []
@@ -139,7 +109,12 @@ def run_game(wall, apples_left):
         if apple.apples_left <= 0:
             print("stage cleared.")
             return True
-        check_wall(snake, wall)
+        if wall.is_hit(snake):
+            # Game Over
+            # Todo : display game-over message & score
+            pygame.quit()
+            sys.exit()
+
         if snake.is_body_colision():
             # Game Over
             # Todo : display game-over message & score
@@ -158,9 +133,11 @@ pygame.time.set_timer(pygame.USEREVENT, 10000)
 
 ###### Levels
 levels = []
-levels.append(make_boundary_wall([]))
-level = make_boundary_wall([])
-levels.append(make_horizontal_wall(level, 100, 400, 150))
+wall = Wall(screen, screen_size, tile_size)
+levels.append(wall.make_boundary_wall())
+wall = Wall(screen, screen_size, tile_size)
+wall = wall.make_boundary_wall()
+levels.append(wall.make_horizontal_wall(100, 400, 150))
 
 for level in levels:
     apples_left = 5

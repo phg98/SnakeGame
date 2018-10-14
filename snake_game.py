@@ -6,10 +6,9 @@ from pygame.locals import *
 
 from apple import Apple
 from snake import Snake
-
-# Define colors
 from wall import Wall
 
+# Define colors
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
@@ -30,7 +29,6 @@ D_DOWN = 4
 pygame.init()
 screen_size = (480, 320)
 tile_size = (10, 10)
-board_size = (screen_size[0] // tile_size[0], screen_size[1] // tile_size[1])
 screen = pygame.display.set_mode(screen_size, DOUBLEBUF)
 score = 0
 TAIL_INCREASE = 3
@@ -52,7 +50,7 @@ def run_game(wall, apples_left):
 
     # Init apple
     apples = []
-    apple = Apple(screen, screen_size, tile_size, board_size, TAIL_INCREASE, apples_left)
+    apple = Apple(screen, screen_size, tile_size, TAIL_INCREASE, apples_left)
     apple.add_apple(apples, wall, snake)
 
     # Main Loop
@@ -133,11 +131,22 @@ pygame.time.set_timer(pygame.USEREVENT, 10000)
 
 ###### Levels
 levels = []
-wall = Wall(screen, screen_size, tile_size)
-levels.append(wall.make_boundary_wall())
-wall = Wall(screen, screen_size, tile_size)
-wall = wall.make_boundary_wall()
-levels.append(wall.make_horizontal_wall(100, 400, 150))
+
+level1 = Wall(screen, screen_size, tile_size)
+levels.append(level1.make_boundary_wall())
+
+level2 = Wall(screen, screen_size, tile_size)
+level2 = level2.make_boundary_wall()
+levels.append(level2.make_horizontal_wall(100, 400, 150))
+
+level3 = Wall(screen, screen_size, tile_size)
+level3 = level3.make_boundary_wall()
+levels.append(level3.make_vertical_wall(100, 300, 200))
+
+level4 = Wall(screen, screen_size, tile_size)
+level4 = level4.make_boundary_wall()
+level4 = level4.make_horizontal_wall(100, 400, 150)
+level4.append(level4.make_vertical_wall(100, 300, 200))
 
 for level in levels:
     apples_left = 5

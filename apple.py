@@ -10,11 +10,11 @@ GREY = (150, 150, 150)
 
 
 class Apple():
-    def __init__(self, a_screen, a_screen_size, a_tile_size, a_board_size, a_tail_increase, a_apples_left):
+    def __init__(self, a_screen, a_screen_size, a_tile_size, a_tail_increase, a_apples_left):
         self.screen = a_screen
         self.screen_size = a_screen_size
         self.tile_size = a_tile_size
-        self.board_size = a_board_size
+        self.board_size = (self.screen_size[0] // self.tile_size[0], self.screen_size[1] // self.tile_size[1])
         self.tail_increase = a_tail_increase
         self.apples_left = a_apples_left
 

@@ -58,13 +58,11 @@ def run_game(wall, apples_left):
         for event in pygame.event.get():
             # Event handler
             if event.type == QUIT:
-                pygame.quit()
-                sys.exit()
+                return False
 
             if event.type == KEYDOWN:  # Press 'Q' to quit the game
                 if event.key == K_q:
-                    pygame.quit()
-                    sys.exit()
+                    return False
 
             if event.type == MOUSEBUTTONDOWN and event.button == LEFT:
                 print("left mouse up at (%d, %d)" % event.pos)
@@ -108,16 +106,10 @@ def run_game(wall, apples_left):
             print("stage cleared.")
             return True
         if wall.is_hit(snake):
-            # Game Over
-            # Todo : display game-over message & score
-            pygame.quit()
-            sys.exit()
+            return False
 
         if snake.is_body_colision():
-            # Game Over
-            # Todo : display game-over message & score
-            pygame.quit()
-            sys.exit()
+            return False
 
         snake.draw_snake()
 
@@ -128,9 +120,12 @@ def wait_for_space_input():
     while True:
         for event in pygame.event.get():
             # Event handler
-            if event.type == KEYDOWN:  # Press 'space' to return
+            if event.type == KEYDOWN:  # Press 'space' to continue
                 if event.key == K_SPACE:
-                    return
+                    return 'continue'
+            if event.type == KEYDOWN:  # Press 'q' to quit
+                if event.key == K_q:
+                    return 'quit'
 
 def render_multi_line(text, x, y, fsize):
     fontObj = pygame.font.Font('C:\\freesansbold.ttf', fsize)  # 현재 디렉토리로부터 myfont.ttf 폰트 파일을 로딩한다. 텍스트 크기를 32로 한다
@@ -169,6 +164,26 @@ def start_screen():
     wait_for_space_input()
 
 
+def gameover_screen():
+    end_message = '''
+    Game Over
+    
+    Press R to restart the game.
+    Press any key to quit the game.
+    '''
+    render_multi_line(end_message, 0, 10, 16)
+
+    pygame.display.update()
+
+    while True:
+        for event in pygame.event.get():
+            # Event handler
+            if event.type == KEYDOWN:  # Press 'space' to continue
+                if event.key == K_r:
+                    return True
+                else:
+                    return False
+
 # Speed handling
 pygame.time.set_timer(pygame.USEREVENT, 10000)
 
@@ -192,26 +207,33 @@ level4 = level4.make_boundary_wall()
 level4 = level4.make_horizontal_wall(100, 400, 150)
 level4.append(level4.make_vertical_wall(100, 300, 200))
 
-start_screen()
-screen.fill(BLACK)
+is_game_continue = True
 
-for level in levels:
-    apples_left = 5
-    print(level)
-    # run_game
-    isClear = run_game(level, apples_left)
+while (is_game_continue):
+    start_screen()
     screen.fill(BLACK)
-    if isClear is True:
-        # display end screen       
-        print("Level Cleared!")
-        print("Score = ", score)
-    else:
-        # display failed screen
-        print("Level Failed!")
-        print("Score = ", score)
-        break
-print(len(levels), " levels ")
-print("Game End")
+
+    for level in levels:
+        apples_left = 5
+        print(level)
+        # run_game
+        isClear = run_game(level, apples_left)
+        screen.fill(BLACK)
+        if isClear is True:
+            # display end screen
+            print("Level Cleared!")
+            print("Score = ", score)
+        else:
+            # display failed screen
+            print("Level Failed!")
+            print("Score = ", score)
+            break
+
+    print(len(levels), " levels ")
+    print("Game End")
+    is_game_continue = gameover_screen()
+    screen.fill(BLACK)
+
 pygame.quit()
 sys.exit()
 

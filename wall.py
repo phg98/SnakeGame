@@ -22,6 +22,12 @@ class Wall(list):
         return self
 
 
+    def make_vertical_wall(self, start, end, x):
+        for i in range(start, end, self.tile_size[1]):
+            self.append((x, i))
+        return self
+
+
     def make_boundary_wall(self):
         for i in range(0, self.screen_size[0], self.tile_size[0]):
             self.append((i, 0))

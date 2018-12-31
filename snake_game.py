@@ -64,6 +64,16 @@ def run_game(wall, apples_left):
                 if event.key == K_q:
                     return False
 
+                if event.key == K_SPACE:    # Press space-bar will pause the game
+                    is_paused = True
+                    # display_pause_message()
+                    while is_paused:
+                        for event in pygame.event.get():
+                            if event.type == KEYDOWN:
+                                is_paused = False
+                    # clear_pause_message(apples, wall, snake))
+
+
             if event.type == MOUSEBUTTONDOWN and event.button == LEFT:
                 print("left mouse up at (%d, %d)" % event.pos)
 

@@ -48,8 +48,8 @@ class Snake(list):
         for body in self[1:]:
             if body == head_pos:
                 return True
-            else:
-                return False
+
+        return False
 
 
     def move(self, direction):

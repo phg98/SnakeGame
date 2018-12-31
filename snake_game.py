@@ -142,11 +142,10 @@ def start_screen():
     # howTo = "Use arrow key to change direction of snake.\nPress 'q' to quit.\nPress space-bar to pause.[not yet implemented]\nEat apples to finish the stage.\nEat apple will makes snake grow, which makes the game more difficult.\nSnake speed will get faster as time passed.\n\nPress SPACE to start the game!"
     howTo = '''
     Use arrow key to change direction of snake.
+    Eat apples to finish the stage.
+    
     Press 'q' to quit.
     Press space-bar to pause.[not yet implemented]
-    Eat apples to finish the stage.
-    Eat apple will makes snake grow, makes the game more difficult.
-    Snake speed will get faster as time passed.
     
     Press SPACE to start the game!
     '''
@@ -193,12 +192,13 @@ level4 = level4.make_boundary_wall()
 level4 = level4.make_horizontal_wall(100, 400, 150)
 level4.append(level4.make_vertical_wall(100, 300, 200))
 
+start_screen()
+screen.fill(BLACK)
+
 for level in levels:
     apples_left = 5
     print(level)
     # run_game
-    start_screen()
-    screen.fill(BLACK)
     isClear = run_game(level, apples_left)
     screen.fill(BLACK)
     if isClear is True:

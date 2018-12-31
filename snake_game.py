@@ -151,8 +151,8 @@ def gameover_screen():
     end_message = '''
     Game Over
     
-    Press r to restart the game.
-    Press any key to quit the game.
+    Press q to quit the game.
+    Press any key to restart the game.
     '''
     render_multi_line(end_message, 0, 10, 16)
 
@@ -162,10 +162,10 @@ def gameover_screen():
         for event in pygame.event.get():
             # Event handler
             if event.type == KEYDOWN:  # Press 'space' to continue
-                if event.key == K_r:
-                    return True
-                else:
+                if event.key == K_q:
                     return False
+                else:
+                    return True
 
 # Speed handling
 pygame.time.set_timer(pygame.USEREVENT, 10000)

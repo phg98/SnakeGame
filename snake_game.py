@@ -27,7 +27,9 @@ D_DOWN = 4
 
 # Initialize
 pygame.init()
-screen_size = (480, 320)
+SCREEN_WIDTH = 480
+SCREEN_HEIGHT = 320
+screen_size = (SCREEN_WIDTH, SCREEN_HEIGHT)
 tile_size = (10, 10)
 screen = pygame.display.set_mode(screen_size, DOUBLEBUF)
 score = 0
@@ -134,11 +136,16 @@ def wait_for_space_input():
                 if event.key == K_SPACE:
                     return 'continue'
 
-def render_multi_line(text, x, y, fsize):
+def render_multi_line(text, x, y, fsize, center=False):
     fontObj = pygame.font.Font('C:\\freesansbold.ttf', fsize)  # 현재 디렉토리로부터 myfont.ttf 폰트 파일을 로딩한다. 텍스트 크기를 32로 한다
     lines = text.splitlines()
     for i, l in enumerate(lines):
-        screen.blit(fontObj.render(l, 0, GREEN), (x, y + fsize * i))
+        if center:
+            lineObj = fontObj.render(l, True, GREEN)
+            text_rect = lineObj.get_rect(center=(SCREEN_WIDTH/2, y + fsize * i + (fsize//2)))
+            screen.blit(lineObj, text_rect)
+        else:
+            screen.blit(fontObj.render(l, 0, GREEN), (x, y + fsize * i))
 
 def start_screen():
     howTo = '''
@@ -154,6 +161,17 @@ def start_screen():
 
     pygame.display.update()
 
+    wait_for_space_input()
+
+
+def ready_screen(level):
+    message = '''
+    
+    Press SPACE to start the game!
+    '''
+    message = "    Level "+str(level)+message
+    render_multi_line(message, 5, 100, 16, center=True)
+    pygame.display.update()
     wait_for_space_input()
 
 
@@ -209,6 +227,8 @@ while (is_game_continue):
     for level in levels:
         apples_left = 5
         print(level)
+        ready_screen(levels.index(level)+1)
+        screen.fill(BLACK)
         # run_game
         isClear = run_game(level, apples_left)
         screen.fill(BLACK)

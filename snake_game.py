@@ -39,7 +39,7 @@ TAIL_INCREASE = 3
 def run_game(wall, apples_left):
     global score
     # frame/sec definition
-    target_fps = 5
+    target_fps = 10
     clock = pygame.time.Clock()
 
     # Init snake

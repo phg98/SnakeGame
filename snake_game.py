@@ -157,6 +157,17 @@ def start_screen():
     wait_for_space_input()
 
 
+def ready_screen(level):
+    message = '''
+    
+    Press SPACE to start the game!
+    '''
+    message = "    Level "+str(level)+message
+    render_multi_line(message, 5, 10, 16)
+    pygame.display.update()
+    wait_for_space_input()
+
+
 def gameover_screen():
     end_message = '''
     Game Over
@@ -209,6 +220,8 @@ while (is_game_continue):
     for level in levels:
         apples_left = 5
         print(level)
+        ready_screen(levels.index(level))
+        screen.fill(BLACK)
         # run_game
         isClear = run_game(level, apples_left)
         screen.fill(BLACK)

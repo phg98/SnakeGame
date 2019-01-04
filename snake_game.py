@@ -7,6 +7,7 @@ from pygame.locals import *
 from apple import Apple
 from snake import Snake
 from wall import Wall
+from level import Level
 
 # Define colors
 BLACK = (0, 0, 0)
@@ -202,24 +203,8 @@ pygame.time.set_timer(pygame.USEREVENT, 10000)
 
 
 ###### Levels
-levels = []
-
-level1 = Wall(screen, screen_size, tile_size)
-levels.append(level1.make_boundary_wall())
-
-level2 = Wall(screen, screen_size, tile_size)
-level2 = level2.make_boundary_wall()
-margin = 10 * TILE_SIZE_X
-levels.append(level2.make_horizontal_wall(margin, SCREEN_WIDTH - margin, SCREEN_HEIGHT//2))
-
-level3 = Wall(screen, screen_size, tile_size)
-level3 = level3.make_boundary_wall()
-levels.append(level3.make_vertical_wall(margin, SCREEN_HEIGHT - margin, SCREEN_WIDTH//2))
-
-level4 = Wall(screen, screen_size, tile_size)
-level4 = level4.make_boundary_wall()
-level4 = level4.make_horizontal_wall(margin, SCREEN_WIDTH - margin, SCREEN_HEIGHT//2)
-levels.append(level4.make_vertical_wall(margin, SCREEN_HEIGHT - margin, SCREEN_WIDTH//2))
+level_manager = Level(screen, screen_size, tile_size)
+levels = level_manager.create_levels()
 
 is_game_continue = True
 

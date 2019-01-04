@@ -30,7 +30,9 @@ pygame.init()
 SCREEN_WIDTH = 480
 SCREEN_HEIGHT = 320
 screen_size = (SCREEN_WIDTH, SCREEN_HEIGHT)
-tile_size = (10, 10)
+TILE_SIZE_X = 10
+TILE_SIZE_Y = 10
+tile_size = (TILE_SIZE_X, TILE_SIZE_Y)
 screen = pygame.display.set_mode(screen_size, DOUBLEBUF)
 score = 0
 TAIL_INCREASE = 3
@@ -207,16 +209,17 @@ levels.append(level1.make_boundary_wall())
 
 level2 = Wall(screen, screen_size, tile_size)
 level2 = level2.make_boundary_wall()
-levels.append(level2.make_horizontal_wall(100, 400, 150))
+margin = 10 * TILE_SIZE_X
+levels.append(level2.make_horizontal_wall(margin, SCREEN_WIDTH - margin, SCREEN_HEIGHT//2))
 
 level3 = Wall(screen, screen_size, tile_size)
 level3 = level3.make_boundary_wall()
-levels.append(level3.make_vertical_wall(100, 300, 200))
+levels.append(level3.make_vertical_wall(margin, SCREEN_HEIGHT - margin, SCREEN_WIDTH//2))
 
 level4 = Wall(screen, screen_size, tile_size)
 level4 = level4.make_boundary_wall()
-level4 = level4.make_horizontal_wall(100, 400, 150)
-level4.append(level4.make_vertical_wall(100, 300, 200))
+level4 = level4.make_horizontal_wall(margin, SCREEN_WIDTH - margin, SCREEN_HEIGHT//2)
+levels.append(level4.make_vertical_wall(margin, SCREEN_HEIGHT - margin, SCREEN_WIDTH//2))
 
 is_game_continue = True
 

@@ -16,19 +16,26 @@ class Level():
 
     def create_levels(self):
         levels = []
+
         level1 = Wall(self.screen, self.screen_size, self.tile_size)
         levels.append(level1.make_boundary_wall())
-        level2 = Wall(self.screen, self.screen_size, self.tile_size)
-        level2 = level2.make_boundary_wall()
-        margin = 10 * self.tile_size[0]
-        levels.append(level2.make_horizontal_wall(margin,  self.screen_width - margin, self.screen_height // 2))
-        level3 = Wall(self.screen, self.screen_size, self.tile_size)
-        level3 = level3.make_boundary_wall()
-        levels.append(level3.make_vertical_wall(margin, self.screen_height - margin,  self.screen_width // 2))
-        level4 = Wall(self.screen, self.screen_size, self.tile_size)
-        level4 = level4.make_boundary_wall()
-        level4 = level4.make_horizontal_wall(margin,  self.screen_width - margin, self.screen_height // 2)
-        levels.append(level4.make_vertical_wall(margin, self.screen_height - margin,  self.screen_width // 2))
+
+        levels = self.create_basic_levels(levels, 10)
+        levels = self.create_basic_levels(levels, 5)
+        levels = self.create_basic_levels(levels, 3)
 
         return levels
 
+    def create_basic_levels(self, levels, margin):
+        level2 = Wall(self.screen, self.screen_size, self.tile_size)
+        level2 = level2.make_boundary_wall()
+        margin_pix = margin * self.tile_size[0]
+        levels.append(level2.make_horizontal_wall(margin_pix, self.screen_width - margin_pix, self.screen_height // 2))
+        level3 = Wall(self.screen, self.screen_size, self.tile_size)
+        level3 = level3.make_boundary_wall()
+        levels.append(level3.make_vertical_wall(margin_pix, self.screen_height - margin_pix, self.screen_width // 2))
+        level4 = Wall(self.screen, self.screen_size, self.tile_size)
+        level4 = level4.make_boundary_wall()
+        level4 = level4.make_horizontal_wall(margin_pix, self.screen_width - margin_pix, self.screen_height // 2)
+        levels.append(level4.make_vertical_wall(margin_pix, self.screen_height - margin_pix, self.screen_width // 2))
+        return levels

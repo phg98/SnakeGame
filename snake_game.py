@@ -37,6 +37,7 @@ tile_size = (TILE_SIZE_X, TILE_SIZE_Y)
 screen = pygame.display.set_mode(screen_size, DOUBLEBUF)
 score = 0
 TAIL_INCREASE = 3
+START_LIVES = 3
 
 
 def run_game(wall, apples_left):
@@ -164,12 +165,12 @@ def start_screen():
     wait_for_space_input()
 
 
-def ready_screen(level):
+def ready_screen(level, lives):
     message = '''
     
     Press SPACE to start the game!
     '''
-    message = "    Level "+str(level)+message
+    message = "    Level "+str(level) + "\n    Life remain " + str(lives) + message
     render_multi_line(message, 5, 100, 16, center=True)
     pygame.display.update()
     wait_for_space_input()
@@ -208,23 +209,32 @@ is_game_continue = True
 while (is_game_continue):
     start_screen()
     screen.fill(BLACK)
+    lives = START_LIVES
 
     for level in levels:
-        apples_left = 5
-        print(level)
-        ready_screen(levels.index(level)+1)
-        screen.fill(BLACK)
-        # run_game
-        isClear = run_game(level, apples_left)
-        screen.fill(BLACK)
-        if isClear is True:
-            # display end screen
-            print("Level Cleared!")
-            print("Score = ", score)
-        else:
-            # display failed screen
-            print("Level Failed!")
-            print("Score = ", score)
+        isClear = False
+        is_game_over = False
+        while (not isClear):
+            apples_left = 5
+            print(level)
+            ready_screen(levels.index(level)+1, lives)
+            screen.fill(BLACK)
+            # run_game
+            isClear = run_game(level, apples_left)
+            screen.fill(BLACK)
+            if isClear is True:
+                # display end screen
+                print("Level Cleared!")
+                print("Score = ", score)
+            else:
+                # display failed screen
+                print("Level Failed!")
+                print("Score = ", score)
+                lives -= 1
+                if lives == 0:
+                    is_game_over = True
+                    break
+        if is_game_over:
             break
 
     print(len(levels), " levels ")

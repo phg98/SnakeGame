@@ -68,7 +68,8 @@ def run_game(wall, apples_left):
 
         if event.type == KEYDOWN:  # Press 'Q' to quit the game
             if event.key == K_q:
-                return False
+                pygame.quit()
+                sys.exit()
 
             if event.key == K_SPACE:    # Press space-bar will pause the game
                 is_paused = True

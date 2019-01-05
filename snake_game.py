@@ -60,49 +60,46 @@ def run_game(wall, apples_left):
 
     # Main Loop
     while True:
-        for event in pygame.event.get():
-            # Event handler
-            if event.type == QUIT:
+        event = pygame.event.poll()
+        # Event handler
+        if event.type == QUIT:
+            return False
+
+        if event.type == KEYDOWN:  # Press 'Q' to quit the game
+            if event.key == K_q:
                 return False
 
-            if event.type == KEYDOWN:  # Press 'Q' to quit the game
-                if event.key == K_q:
-                    return False
-
-                if event.key == K_SPACE:    # Press space-bar will pause the game
-                    is_paused = True
-                    # display_pause_message()
-                    while is_paused:
-                        for event in pygame.event.get():
-                            if event.type == KEYDOWN:
-                                is_paused = False
-                    # clear_pause_message(apples, wall, snake))
+            if event.key == K_SPACE:    # Press space-bar will pause the game
+                is_paused = True
+                # display_pause_message()
+                while is_paused:
+                    for event in pygame.event.get():
+                        if event.type == KEYDOWN:
+                            is_paused = False
+                # clear_pause_message(apples, wall, snake))
 
 
-            if event.type == MOUSEBUTTONDOWN and event.button == LEFT:
-                print("left mouse up at (%d, %d)" % event.pos)
+        if event.type == MOUSEBUTTONDOWN and event.button == LEFT:
+            print("left mouse up at (%d, %d)" % event.pos)
 
-            if event.type == KEYDOWN:
-                if event.key == K_RIGHT:
-                    if direction != D_LEFT:
-                        direction = D_RIGHT
-            if event.type == KEYDOWN:
-                if event.key == K_LEFT:
-                    if direction != D_RIGHT:
-                        direction = D_LEFT
-            if event.type == KEYDOWN:
-                if event.key == K_UP:
-                    if direction != D_DOWN:
-                        direction = D_UP
-            if event.type == KEYDOWN:
-                if event.key == K_DOWN:
-                    if direction != D_UP:
-                        direction = D_DOWN
+        if event.type == KEYDOWN:
+            if event.key == K_RIGHT:
+                if direction != D_LEFT:
+                    direction = D_RIGHT
+            elif event.key == K_LEFT:
+                if direction != D_RIGHT:
+                    direction = D_LEFT
+            elif event.key == K_UP:
+                if direction != D_DOWN:
+                    direction = D_UP
+            elif event.key == K_DOWN:
+                if direction != D_UP:
+                    direction = D_DOWN
 
-            if event.type == pygame.USEREVENT:
-                print("target_pfs : ", target_fps)
-                target_fps += 2
-                if target_fps > 70: target_fps = 70
+        if event.type == pygame.USEREVENT:
+            print("target_pfs : ", target_fps)
+            target_fps += 2
+            if target_fps > 70: target_fps = 70
 
         snake.erase_old_snake()
 

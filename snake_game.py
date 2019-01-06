@@ -1,7 +1,7 @@
 #! python3
 # -*- coding: utf-8 -*-
 
-import sys, pygame
+import sys, pygame, time
 from pygame.locals import *
 
 from apple import Apple
@@ -187,6 +187,9 @@ def gameover_screen():
     render_multi_line(end_message, 0, 10, 16)
 
     pygame.display.update()
+
+    time.sleep(1) # player's last input should be discarded.
+    pygame.event.clear()
 
     while True:
         for event in pygame.event.get():

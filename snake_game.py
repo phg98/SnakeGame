@@ -54,10 +54,17 @@ def run_game(wall, apples_left):
     # Init wall
     wall.draw_wall()
 
+    # Init fake apples
+    num_fake_apples = 20
+    fake_apples = []
+    for i in range(0, num_fake_apples):
+        fake_apple = Apple(screen, screen_size, tile_size, TAIL_INCREASE, apples_left, True)
+        fake_apple.add_apple(fake_apples, wall, snake, fake_apples)
+
     # Init apple
     apples = []
     apple = Apple(screen, screen_size, tile_size, TAIL_INCREASE, apples_left)
-    apple.add_apple(apples, wall, snake)
+    apple.add_apple(apples, wall, snake, fake_apples)
 
     # Main Loop
     while True:
@@ -109,10 +116,17 @@ def run_game(wall, apples_left):
         snake.move(direction)
 
 
-        tail_increase = apple.check_apple(wall, snake, apples)
+        tail_increase = apple.check_apple(wall, snake, apples, fake_apples)
         if tail_increase > 0 :
             snake.update_tail_increase(tail_increase)
             score += 10
+            print("Score = ", score)
+
+
+        tail_increase = fake_apple.check_apple(wall, snake, fake_apples, apples)
+        if tail_increase > 0 :
+            snake.update_tail_increase(tail_increase)
+            score += 2
             print("Score = ", score)
 
         # print(apples_left)

@@ -152,16 +152,16 @@ def wait_for_space_input():
                 if event.key == K_SPACE:
                     return 'continue'
 
-def render_multi_line(text, x, y, fsize, center=False):
+def render_multi_line(text, x, y, fsize, center=False, color=GREEN):
     fontObj = pygame.font.Font('C:\\freesansbold.ttf', fsize)  # 현재 디렉토리로부터 myfont.ttf 폰트 파일을 로딩한다. 텍스트 크기를 32로 한다
     lines = text.splitlines()
     for i, l in enumerate(lines):
         if center:
-            lineObj = fontObj.render(l, True, GREEN)
+            lineObj = fontObj.render(l, True, color)
             text_rect = lineObj.get_rect(center=(SCREEN_WIDTH/2, y + fsize * i + (fsize//2)))
             screen.blit(lineObj, text_rect)
         else:
-            screen.blit(fontObj.render(l, 0, GREEN), (x, y + fsize * i))
+            screen.blit(fontObj.render(l, 0, color), (x, y + fsize * i))
 
 def start_screen():
     howTo = '''
@@ -239,12 +239,16 @@ while (is_game_continue):
             screen.fill(BLACK)
             # run_game
             isClear = run_game(level, apples_left)
-            screen.fill(BLACK)
+            pygame.draw.rect(screen, BLACK, (100, 50, SCREEN_WIDTH-200, SCREEN_HEIGHT-100))
             if isClear is True:
                 # display end screen
+                message = "Level Cleared!"
+                message_color = GREEN
                 print("Level Cleared!")
                 print("Score = ", score)
             else:
+                message = "Snake DEAD !!!"
+                message_color = RED
                 # display failed screen
                 print("Level Failed!")
                 print("Score = ", score)
@@ -252,9 +256,16 @@ while (is_game_continue):
                 if lives == 0:
                     is_game_over = True
                     break
+
+            render_multi_line(message, 10, 100, 30, center=True, color=message_color)
+            render_multi_line("Press Space bar", 10, 150, 16, center=True)
+            pygame.display.update()
+            wait_for_space_input()
+            screen.fill(BLACK)
         if is_game_over:
             break
 
+    screen.fill(BLACK)
     print(len(levels), " levels ")
     print("Game End")
     is_game_continue = gameover_screen()

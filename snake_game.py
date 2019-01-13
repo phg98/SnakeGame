@@ -88,7 +88,6 @@ def run_game(wall, apples_left):
                             is_paused = False
                 # clear_pause_message(apples, wall, snake))
 
-
         if event.type == MOUSEBUTTONDOWN and event.button == LEFT:
             print("left mouse up at (%d, %d)" % event.pos)
 
@@ -116,13 +115,11 @@ def run_game(wall, apples_left):
         # Update state
         snake.move(direction)
 
-
         tail_increase = apple.check_apple(wall, snake, apples, fake_apples)
         if tail_increase > 0 :
             snake.update_tail_increase(tail_increase)
             score += 10
             print("Score = ", score)
-
 
         tail_increase = fake_apple.check_apple(wall, snake, fake_apples, apples)
         if tail_increase > 0 :
@@ -150,13 +147,13 @@ def run_game(wall, apples_left):
 pygame.time.set_timer(pygame.USEREVENT, 10000)
 
 
-###### Levels
+# Levels
 level_manager = Level(screen, screen_size, tile_size)
 levels = level_manager.create_levels()
 
 is_game_continue = True
 
-while (is_game_continue):
+while is_game_continue:
     screen_maker.start_screen()
     screen.fill(BLACK)
     lives = START_LIVES
@@ -164,7 +161,7 @@ while (is_game_continue):
     for level in levels:
         isClear = False
         is_game_over = False
-        while (not isClear):
+        while not isClear:
             apples_left = 5
             print(level)
             screen_maker.ready_screen(levels.index(level) + 1, lives)

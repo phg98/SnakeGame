@@ -1,12 +1,12 @@
 #! python3
 # -*- coding: utf-8 -*-
 
-import sys, pygame, time
+import sys, pygame
 from pygame.locals import *
 
 from apple import Apple
+from screen import Screens
 from snake import Snake
-from wall import Wall
 from level import Level
 
 # Define colors
@@ -35,6 +35,7 @@ TILE_SIZE_X = 10
 TILE_SIZE_Y = 10
 tile_size = (TILE_SIZE_X, TILE_SIZE_Y)
 screen = pygame.display.set_mode(screen_size, DOUBLEBUF)
+screen_maker = Screens(screen, screen_size, tile_size)
 score = 0
 TAIL_INCREASE = 3
 START_LIVES = 3
@@ -144,82 +145,6 @@ def run_game(wall, apples_left):
         pygame.display.flip()  # Update screen
         clock.tick(target_fps)
 
-def wait_for_space_input():
-    while True:
-        for event in pygame.event.get():
-            # Event handler
-            if event.type == KEYDOWN:  # Press 'space' to continue
-                if event.key == K_SPACE:
-                    return 'continue'
-
-def render_multi_line(text, x, y, fsize, center=False, color=GREEN):
-    fontObj = pygame.font.Font('C:\\freesansbold.ttf', fsize)  # 현재 디렉토리로부터 myfont.ttf 폰트 파일을 로딩한다. 텍스트 크기를 32로 한다
-    lines = text.splitlines()
-    for i, l in enumerate(lines):
-        if center:
-            lineObj = fontObj.render(l, True, color)
-            text_rect = lineObj.get_rect(center=(SCREEN_WIDTH/2, y + fsize * i + (fsize//2)))
-            screen.blit(lineObj, text_rect)
-        else:
-            screen.blit(fontObj.render(l, 0, color), (x, y + fsize * i))
-
-def start_screen():
-    howTo = '''
-    Use arrow key to change direction of snake.
-    Eat apples to finish the stage.
-    
-    Press 'q' to quit.
-    Press space-bar to pause.[not yet implemented]
-    
-    Press SPACE to start the game!
-    '''
-    render_multi_line(howTo, 0, 0, 16)
-
-    pygame.display.update()
-
-    wait_for_space_input()
-
-
-def ready_screen(level, lives):
-    message = '''
-    
-    Press SPACE to start the game!
-    '''
-    message = "    Level "+str(level) + "\n    Life remain " + str(lives) + message
-    render_multi_line(message, 5, 100, 16, center=True)
-    pygame.display.update()
-    wait_for_space_input()
-
-def result_screen(message, color):
-    margin_x = 100
-    margin_y = 50
-    pygame.draw.rect(screen, BLACK, (margin_x, margin_y, SCREEN_WIDTH - margin_x*2, SCREEN_HEIGHT - margin_y*2))
-    render_multi_line(message, 10, margin_y+50, 30, center=True, color=color)
-    pygame.display.update()
-    time.sleep(2)
-
-def gameover_screen():
-    end_message = '''
-    Game Over
-    
-    Press q to quit the game.
-    Press any key to restart the game.
-    '''
-    render_multi_line(end_message, 0, 10, 16)
-
-    pygame.display.update()
-
-    time.sleep(1) # player's last input should be discarded.
-    pygame.event.clear()
-
-    while True:
-        for event in pygame.event.get():
-            # Event handler
-            if event.type == KEYDOWN:  # Press 'space' to continue
-                if event.key == K_q:
-                    return False
-                else:
-                    return True
 
 # Speed handling
 pygame.time.set_timer(pygame.USEREVENT, 10000)
@@ -232,7 +157,7 @@ levels = level_manager.create_levels()
 is_game_continue = True
 
 while (is_game_continue):
-    start_screen()
+    screen_maker.start_screen()
     screen.fill(BLACK)
     lives = START_LIVES
 
@@ -242,16 +167,16 @@ while (is_game_continue):
         while (not isClear):
             apples_left = 5
             print(level)
-            ready_screen(levels.index(level)+1, lives)
+            screen_maker.ready_screen(levels.index(level) + 1, lives)
             screen.fill(BLACK)
             # run_game
             isClear = run_game(level, apples_left)
             if isClear is True:
-                result_screen("Level Cleared!", GREEN)
+                screen_maker.result_screen("Level Cleared!", GREEN)
                 print("Level Cleared!")
                 print("Score = ", score)
             else:
-                result_screen("Snake DEAD !!!", RED)
+                screen_maker.result_screen("Snake DEAD !!!", RED)
                 print("Level Failed!")
                 print("Score = ", score)
                 lives -= 1
@@ -266,7 +191,7 @@ while (is_game_continue):
     screen.fill(BLACK)
     print(len(levels), " levels ")
     print("Game End")
-    is_game_continue = gameover_screen()
+    is_game_continue = screen_maker.gameover_screen()
     screen.fill(BLACK)
 
 pygame.quit()

@@ -190,6 +190,13 @@ def ready_screen(level, lives):
     pygame.display.update()
     wait_for_space_input()
 
+def result_screen(message, color):
+    margin_x = 100
+    margin_y = 50
+    pygame.draw.rect(screen, BLACK, (margin_x, margin_y, SCREEN_WIDTH - margin_x*2, SCREEN_HEIGHT - margin_y*2))
+    render_multi_line(message, 10, margin_y+50, 30, center=True, color=color)
+    pygame.display.update()
+    time.sleep(2)
 
 def gameover_screen():
     end_message = '''
@@ -239,17 +246,12 @@ while (is_game_continue):
             screen.fill(BLACK)
             # run_game
             isClear = run_game(level, apples_left)
-            pygame.draw.rect(screen, BLACK, (100, 50, SCREEN_WIDTH-200, SCREEN_HEIGHT-100))
             if isClear is True:
-                # display end screen
-                message = "Level Cleared!"
-                message_color = GREEN
+                result_screen("Level Cleared!", GREEN)
                 print("Level Cleared!")
                 print("Score = ", score)
             else:
-                message = "Snake DEAD !!!"
-                message_color = RED
-                # display failed screen
+                result_screen("Snake DEAD !!!", RED)
                 print("Level Failed!")
                 print("Score = ", score)
                 lives -= 1
@@ -257,10 +259,6 @@ while (is_game_continue):
                     is_game_over = True
                     break
 
-            render_multi_line(message, 10, 100, 30, center=True, color=message_color)
-            render_multi_line("Press Space bar", 10, 150, 16, center=True)
-            pygame.display.update()
-            wait_for_space_input()
             screen.fill(BLACK)
         if is_game_over:
             break

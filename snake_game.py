@@ -39,7 +39,11 @@ screen_maker = Screens(screen, screen_size, tile_size)
 score = 0
 TAIL_INCREASE = 3
 START_LIVES = 3
+APPLES_LEFT = 5
 
+if "-d" in sys.argv:  # Debug Mode
+    START_LIVES = 2
+    APPLES_LEFT = 2
 
 def run_game(wall, apples_left):
     global score
@@ -162,12 +166,11 @@ while is_game_continue:
         isClear = False
         is_game_over = False
         while not isClear:
-            apples_left = 5
             print(level)
             screen_maker.ready_screen(levels.index(level) + 1, lives)
             screen.fill(BLACK)
             # run_game
-            isClear = run_game(level, apples_left)
+            isClear = run_game(level, APPLES_LEFT)
             if isClear is True:
                 screen_maker.result_screen("Level Cleared!", GREEN)
                 print("Level Cleared!")
